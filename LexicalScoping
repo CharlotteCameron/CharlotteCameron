@@ -1,0 +1,44 @@
+## The function "makeCacheMatrix" creates a new environment that
+# is unique.
+# The inversed function is cached within the object `m` which is
+# unique for every instance where the function is called.
+# The function has one formal argument, `x`, as well as two free
+# variables, `m` and `set`.
+# We introduce the <<- function which is called a closure.
+# The function has an output for the following functions:
+# setInverse, getInverse.
+
+makeCacheMatrix <- function(x = matrix()) {
+  m <- NULL
+  set <- function(y) {
+    x <<- y
+    m <<- NULL
+  }
+get <- function()x
+setInverse <- function(inverse) m <<- inverse
+getInverse <- function()m
+list(set = set, get = get,
+     setInverse = setInverse,
+     getInverse = getInverse)
+}
+
+## This function is designed to calculate the inverse of the
+# the function "makecacheMatrix" above.
+# If the inverse has already been calculated, then it would be
+# retrieved from the cache.
+# The function calculates the vector above. It calculates the inverse.
+# If there is an inverse, then the inverse is obtained and computation
+# is avoided. Otherwise, it calculates the inverse via the
+# `setInverse`function.
+
+cacheSolve <- function(x, ...) {
+  m <- x$getInverse()
+  if(!is.null(m)){
+    message("getting cached data")
+    return(m)
+  }
+  mat <- x$get()
+  m <- solve(mat,...)
+  x$setInverse(m)
+  m
+}
